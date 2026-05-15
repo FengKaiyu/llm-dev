@@ -32,4 +32,18 @@ jobs:
         with:
           context: .
           push: true
+          load: true                # 新增：将镜像加载到本地
           tags: ghcr.io/fengkaiyu/llm-dev:latest
+
+      - name: Save Docker image to tar
+        run: |
+          docker save ghcr.io/fengkaiyu/llm-dev:latest -o llm-dev.tar
+          # 可选：压缩为 .tar.gz
+          # docker save ghcr.io/fengkaiyu/llm-dev:latest | gzip > llm-dev.tar.gz
+
+      - name: Upload tar as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image-tar
+          path: llm-dev.tar
+          # 如果压缩了，改为 llm-dev.tar.gz
